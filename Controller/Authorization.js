@@ -5,7 +5,7 @@ const {validationResult}=require('express-validator/check')
 const jwt=require('jsonwebtoken')
 const bcrypt=require('bcryptjs');
 
-exports.SignUp=(req,res,next)=>{
+exports.SignUp=async(req,res,next)=>{
    
     
     const errors=validationResult(req);
@@ -24,8 +24,13 @@ exports.SignUp=(req,res,next)=>{
     const password=req.body.password;
     const phone =req.body.phone;
     const address=req.body.address;
-
+    //  const check_IF_NAME_EXECT_IN_DB =0;
     if (req.query.auth =="pharmacy"){
+     const   check_IF_NAME_EXECT_IN_DB=await Pharmacy.findOne({name:name});
+       if(check_IF_NAME_EXECT_IN_DB){
+        return     res.status(422).json({message:"this data is already in use"});
+       }
+        
     bcrypt.hash(password,12)
     .then(hashedPassword=>{
         const pharmacy=new Pharmacy(
@@ -53,6 +58,12 @@ exports.SignUp=(req,res,next)=>{
 
 
     if (req.query.auth =="warehouse"){
+
+        const   check_IF_NAME_EXECT_IN_DB=await Warehouse.findOne({name:name});
+        if(check_IF_NAME_EXECT_IN_DB){
+            return  res.status(422).json({message:"this data is already in use"});
+        }
+
         bcrypt.hash(password,12)
         .then(hashedPassword=>{
             const warehouse=new Warehouse(
@@ -121,6 +132,48 @@ if (req.query.auth =="warehouse"){
 })
 .catch((err)=>{if(!err.statusCode){err.statusCode =500;}next(err)})
 }
+
+
+if (req.query.auth =="pharmacy"){
+
+    Pharmacy.findOne({name:name})
+.then(Pharmacy=>{
+    if(!Pharmacy)
+    {
+        const error =new Error('Invalid Name');
+        error.statusCode=401;
+     
+        throw error
+    }
+    load=Pharmacy;
+   // res.json({data:Pharmacy});
+    return  bcrypt.compare(password,Pharmacy.password)
+    
+    
+
+})
+.then(resultOfBcrypt=>{
+   if(!resultOfBcrypt)
+   {
+    const error =new Error('Wrong Password');
+        error.statusCode=401;
+        throw error
+    }
+    const token=jwt.sign({name:load.name,userId:load._id.toString()},'somesupersecretsecret',  {expiresIn:'1h'})
+
+              console.log("this is token for this user \n:"+token +"\n loadUser._id.toString():\n"+ load._id.toString())
+
+         res.status(200).json({token:token,userId:load._id.toString(),status:true})
+})
+.catch((err)=>{if(!err.statusCode){err.statusCode =500;}next(err)})
+}
+
+
+
+
+
+
+
 
 
 }

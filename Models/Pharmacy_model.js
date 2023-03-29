@@ -20,11 +20,11 @@ const Pharmacy_Schema =new Schema({
   pharmacyImage : String,
  
 
-      password: {
+  password: {
     type: String,
     required: [true, 'please provide a password!'],
     minLength: 8,
-    select: false
+    select: true
 },
     
 /*

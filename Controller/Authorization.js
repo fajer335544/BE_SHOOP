@@ -88,20 +88,20 @@ const password=req.body.password;
 //res.json({data:password + name});
 
 let load;
-if (req.query.auth =="pharmacy"){
+if (req.query.auth =="warehouse"){
 
-Pharmacy.findOne({name:name})
-.then(pharmacy=>{
-    if(!pharmacy)
+    Warehouse.findOne({name:name})
+.then(Warehouse=>{
+    if(!Warehouse)
     {
         const error =new Error('Invalid Name');
         error.statusCode=401;
      
         throw error
     }
-    load=pharmacy;
-    res.json({data:pharmacy});
-    return  bcrypt.compare(password,pharmacy.password)
+    load=Warehouse;
+    //res.json({data:Warehouse});
+    return  bcrypt.compare(password,Warehouse.password)
     
     
 
@@ -113,11 +113,11 @@ Pharmacy.findOne({name:name})
         error.statusCode=401;
         throw error
     }
-    const token=jwt.sign({name:load.name,userId:loadUser._id.toString()},'somesupersecretsecret',  {expiresIn:'1h'})
+    const token=jwt.sign({name:load.name,userId:load._id.toString()},'somesupersecretsecret',  {expiresIn:'1h'})
 
-              console.log("this is token for this user \n:"+token +"\n loadUser._id.toString():\n"+ loadUser._id.toString())
+              console.log("this is token for this user \n:"+token +"\n loadUser._id.toString():\n"+ load._id.toString())
 
-         res.status(200).json({token:token,userId:loadUser._id.toString(),status:true})
+         res.status(200).json({token:token,userId:load._id.toString(),status:true})
 })
 .catch((err)=>{if(!err.statusCode){err.statusCode =500;}next(err)})
 }

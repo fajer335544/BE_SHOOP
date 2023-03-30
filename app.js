@@ -10,11 +10,11 @@ const Authorization_Router=require('./Router/Authorization_router');
 const app=express();
 
 
-const bodyParser=require('body-parser');
+//const bodyParser=require('body-parser');
 app.use(cors());
 
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     

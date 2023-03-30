@@ -10,7 +10,10 @@ const productSchema = new mongoose.Schema({
   },
   repo : {
     type : mongoose.Types.ObjectId,
-    required : true
+    required : false
+  },
+  offer:{
+    type:Boolean
   },
   price : {
     type : Number,

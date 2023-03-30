@@ -1,0 +1,3 @@
+POST http:localhost:8080/testToken
+Content-Type: "application/json"
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZmFqZXIiLCJ1c2VySWQiOiI2NDI0NWE4YmQyM2JlNDk1M2VhODBiNmIiLCJpYXQiOjE2ODAxNzcxODIsImV4cCI6MTY4MDE4MDc4Mn0.WLOrYYYeNLqHDNz3HLIbOB7VcgDAVrQjBLxnDZm4SjY
